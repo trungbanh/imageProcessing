@@ -6,6 +6,8 @@
 #include "QLabel"
 #include "iostream"
 
+using namespace QtCharts;
+
 using namespace std ;
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -28,8 +30,9 @@ void MainWindow::DisplayWindown(QImage &image,QString title) {
 
 void MainWindow::on_bt_find_clicked()
 {
+//    D:/trung/hinh
     QString filename = QFileDialog::getOpenFileName(this,"Open File",
-                                                    "D:/trung/hinh",
+                                                    "/home/banhtrung/Pictures",
                                                     "*.* All File;; *.bmp;; *.jpeg;; *.jpg;; *.png;;");
     if (filename.isEmpty() ) {
         return ;
@@ -121,24 +124,33 @@ void MainWindow::on_bt_graph_gray_clicked()
     int cols [255] ;
     QString file = ui->il_Path->text();
     QImage imgin (file);
-    QImage graph(500,500,QImage::Format_ARGB32);
+
     for (int x=0 ; x<imgin.width();x++) {
         for (int y =0 ;y < imgin.height();y++) {
             QRgb color = imgin.pixel(x,y);
             int gray_in = qGray(color);
             QRgb color_out = qRgb(gray_in,gray_in,gray_in);
             cols[gray_in] +=1 ;
+            cout << gray_in << " ";
         }
+        cout << endl ;
     }
-    for (int i =0 ; i <255 ; i++)
-        cout << cols[i] << " ";
-    for (int x=0 ; x<255;x++) {
-        for (int y =0 ;y < max(cols);y++) {
-            QRgb color = imgin.pixel(x,y);
-            int gray_in = qGray(color);
-            QRgb color_out = qRgb(gray_in,gray_in,gray_in);
+    QLineSeries *line = new QLineSeries();
+    line->append(0,0);
+    line->append(255,255);
+    for (int i=0 ; i<254 ; i++) {
+       *line << QPoint(i,cols[i]);
+    }
 
-        }
-        graph.setPixel(x,cols[x],255);
-    }
+    QChart *chart = new QChart();
+    chart->addSeries(line);
+    chart->legend()->hide();
+    chart->createDefaultAxes();
+    chart->setTitle("is okey");
+
+    QChartView *chartView = new QChartView(chart);
+
+    QGridLayout *gridLayout = new QGridLayout(ui->centralWidget);
+    gridLayout->addWidget(chartView,0,0);
+
 }
