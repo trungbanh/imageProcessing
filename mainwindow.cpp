@@ -5,6 +5,7 @@
 #include "QPixmap"
 #include "QLabel"
 #include "iostream"
+#include "string"
 
 using namespace QtCharts;
 
@@ -122,6 +123,9 @@ int MainWindow::max(int cols[]) {
 void MainWindow::on_bt_graph_gray_clicked()
 {
     int cols [255] ;
+    for (int i=0 ; i<255 ; i++) {
+       cols[i] = 0;
+    }
     QString file = ui->il_Path->text();
     QImage imgin (file);
 
@@ -130,21 +134,25 @@ void MainWindow::on_bt_graph_gray_clicked()
             QRgb color = imgin.pixel(x,y);
             int gray_in = qGray(color);
             QRgb color_out = qRgb(gray_in,gray_in,gray_in);
-            cols[gray_in] +=1 ;
-            cout << gray_in << " ";
+            cols[gray_in] = cols[gray_in]+ 1 ;
+//            cout << gray_in << " ";
         }
-        cout << endl ;
+//        cout << endl ;
     }
+
+
     QLineSeries *line = new QLineSeries();
-    line->append(0,0);
-    line->append(255,255);
-    for (int i=0 ; i<254 ; i++) {
+    line->append(0.0,0.0);
+    line->append(255.0,max(cols));
+    for (int i=0 ; i<255 ; i++) {
        *line << QPoint(i,cols[i]);
+       cout << to_string(cols[i]) << endl;
     }
 
     QChart *chart = new QChart();
-    chart->addSeries(line);
+
     chart->legend()->hide();
+    chart->addSeries(line);
     chart->createDefaultAxes();
     chart->setTitle("is okey");
 
