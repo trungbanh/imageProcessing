@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>686</width>
-    <height>426</height>
+    <height>617</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -83,7 +83,7 @@
      </rect>
     </property>
     <property name="title">
-     <string>truoc sang</string>
+     <string>Histogram Slide</string>
     </property>
     <widget class="QPushButton" name="bt_hisSlide_gray">
      <property name="geometry">
@@ -143,12 +143,12 @@
      <rect>
       <x>20</x>
       <y>250</y>
-      <width>471</width>
+      <width>621</width>
       <height>101</height>
      </rect>
     </property>
     <property name="title">
-     <string>graph</string>
+     <string>Show Histogram </string>
     </property>
     <widget class="QPushButton" name="bt_graph_gray">
      <property name="geometry">

@@ -122,8 +122,8 @@ int MainWindow::max(int cols[]) {
 
 void MainWindow::on_bt_graph_gray_clicked()
 {
-    int cols [255] ;
-    for (int i=0 ; i<255 ; i++) {
+    int cols [256] ;
+    for (int i=0 ; i<256 ; i++) {
        cols[i] = 0;
     }
     QString file = ui->il_Path->text();
@@ -135,30 +135,25 @@ void MainWindow::on_bt_graph_gray_clicked()
             int gray_in = qGray(color);
             QRgb color_out = qRgb(gray_in,gray_in,gray_in);
             cols[gray_in] = cols[gray_in]+ 1 ;
-//            cout << gray_in << " ";
         }
-//        cout << endl ;
     }
+    const int HEIGHT = 182;
+    QImage histogram (256,HEIGHT,QImage::Format_ARGB32);
+    histogram.fill(Qt::white);
 
-
-    QLineSeries *line = new QLineSeries();
-    line->append(0.0,0.0);
-    line->append(255.0,max(cols));
-    for (int i=0 ; i<255 ; i++) {
-       *line << QPoint(i,cols[i]);
-       cout << to_string(cols[i]) << endl;
+    int max =0 ;
+    for (int i = 0 ; i < 256 ; i++) {
+        if (cols[i]>max) {
+            max = cols[i];
+        }
     }
-
-    QChart *chart = new QChart();
-
-    chart->legend()->hide();
-    chart->addSeries(line);
-    chart->createDefaultAxes();
-    chart->setTitle("is okey");
-
-    QChartView *chartView = new QChartView(chart);
-
-    QGridLayout *gridLayout = new QGridLayout(ui->centralWidget);
-    gridLayout->addWidget(chartView,0,0);
+    int lineHeight = 0 ;
+    for (int x =0 ; x< 256 ;x++) {
+        lineHeight = HEIGHT*cols[x]/max;
+        for (int y = HEIGHT-1 ; y> HEIGHT-1-lineHeight ; y--){
+            histogram.setPixel(x,y,qRgb(1,1,1));
+        }
+    }
+    DisplayWindown(histogram,"histogram gray");
 
 }
